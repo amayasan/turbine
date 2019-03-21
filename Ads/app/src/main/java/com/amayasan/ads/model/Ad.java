@@ -34,7 +34,17 @@ package com.amayasan.ads.model;
 //  <rating>5.0</rating>
 //</ad>
 
+import com.amayasan.ads.xml.AdsXmlParser;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.io.Serializable;
+
+import static com.amayasan.ads.xml.AdsXmlParser.AD_ELEMENT_TAG;
+import static com.amayasan.ads.xml.AdsXmlParser.readElement;
+import static com.amayasan.ads.xml.AdsXmlParser.skip;
 
 public class Ad implements Serializable {
     public static final String
@@ -85,8 +95,96 @@ public class Ad implements Serializable {
     private String productThumbnail;
     private float rating;
 
-    public Ad() {
+    public static Ad parse(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, AdsXmlParser.ns, AD_ELEMENT_TAG);
+        Ad ad = new Ad();
 
+        while (parser.next() != XmlPullParser.END_TAG) {
+
+            try {
+                if (parser.getEventType() != XmlPullParser.START_TAG) {
+                    continue;
+                }
+                String element = parser.getName();
+
+                switch (element) {
+                    case Ad.APP_ID:
+                        ad.setAppId(readElement(parser, element));
+                        break;
+                    case Ad.APP_PRIVACY_POLICY_URL:
+                        ad.setAppPrivacyPolicyUrl(readElement(parser, element));
+                        break;
+                    case Ad.AVERAGE_RATING_IMAGE_URL:
+                        ad.setAverageRatingImageUrl(readElement(parser, element));
+                        break;
+                    case Ad.BID_RATE:
+                        ad.setBidRate(readElement(parser, element));
+                        break;
+                    case Ad.BILLING_TYPE_ID:
+                        ad.setBillingTypeId(Integer.parseInt(readElement(parser, element)));
+                        break;
+                    case Ad.CALL_TO_ACTION:
+                        ad.setCallToAction(readElement(parser, element));
+                        break;
+                    case Ad.CAMPAIGN_DISPLAY_ORDER:
+                        ad.setCampaignDisplayOrder(Integer.parseInt(readElement(parser, element)));
+                        break;
+                    case Ad.CAMPAIGN_ID:
+                        ad.setCampaignId(Long.parseLong(readElement(parser, element)));
+                        break;
+                    case Ad.CAMPAIGN_TYPE_ID:
+                        ad.setCampaignTypeId(Integer.parseInt(readElement(parser, element)));
+                        break;
+                    case Ad.CATEGORY_NAME:
+                        ad.setCategoryName(readElement(parser, element));
+                        break;
+                    case Ad.CLICK_PROXY_URL:
+                        ad.setClickProxyUrl(readElement(parser, element));
+                        break;
+                    case Ad.CREATIVE_ID:
+                        ad.setCreativeId(Long.parseLong(readElement(parser, element)));
+                        break;
+                    case Ad.HOME_SCREEN:
+                        ad.setHomeScreen(Boolean.parseBoolean(readElement(parser, element)));
+                        break;
+                    case Ad.IMPRESSION_TRACKING_URL:
+                        ad.setImpressionTrackingUrl(readElement(parser, element));
+                        break;
+                    case Ad.IS_RANDOM_PICK:
+                        ad.setRandomPick(Boolean.parseBoolean(readElement(parser, element)));
+                        break;
+                    case Ad.MIN_OS_VERSION:
+                        ad.setMinOSVersion(readElement(parser, element));
+                        break;
+                    case Ad.NUMBER_OF_RATINGS:
+                        ad.setNumberOfRatings(readElement(parser, element));
+                        break;
+                    case Ad.PRODUCT_DESCRIPTION:
+                        ad.setProductDescription(readElement(parser, element));
+                        break;
+                    case Ad.PRODUCT_ID:
+                        ad.setProductId(Long.parseLong(readElement(parser, element)));
+                        break;
+                    case Ad.PRODUCT_NAME:
+                        ad.setProductName(readElement(parser, element));
+                        break;
+                    case Ad.PRODUCT_THUMBNAIL:
+                        ad.setProductThumbnail(readElement(parser, element));
+                        break;
+                    case Ad.RATING:
+                        ad.setRating(Float.parseFloat(readElement(parser, element)));
+                        break;
+                    default:
+                        skip(parser);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return ad;
     }
 
     public String getAppId() {

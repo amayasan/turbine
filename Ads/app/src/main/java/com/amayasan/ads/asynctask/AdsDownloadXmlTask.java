@@ -5,25 +5,36 @@ import android.os.AsyncTask;
 import com.amayasan.ads.model.Ad;
 import com.amayasan.ads.xml.AdsXmlParser;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+// The AdsDownloadXmlTask is an AsyncTask that downloads the XML document
+// at the provided URL, parses it and returns a List<Ad> to the calling
+// AdsFragment via an EventBus message.
 public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
-    public interface OnTaskCompleted {
-        void onSuccess(List<Ad> ads);
-        void onError(String errorMessage);
-    }
+    public static class AdsDownloadXmlMessageEvent {
+        private List<Ad> ads;
 
-    private OnTaskCompleted onTaskCompleted;
+        public AdsDownloadXmlMessageEvent(List<Ad> ads) {
+            setAds(ads);
+        }
 
-    public AdsDownloadXmlTask(OnTaskCompleted onTaskCompleted) {
-        this.onTaskCompleted = onTaskCompleted;
+        public List<Ad> getAds() {
+            return ads;
+        }
+
+        public void setAds(List<Ad> ads) {
+            this.ads = ads;
+        }
     }
 
     @Override
@@ -39,7 +50,16 @@ public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
     @Override
     protected void onPostExecute(List<Ad> ads) {
-        onTaskCompleted.onSuccess(ads);
+
+        Collections.sort(ads, new Comparator<Ad>() {
+            @Override
+            public int compare(Ad lhs, Ad rhs) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return Integer.compare(lhs.getCampaignDisplayOrder(), rhs.getCampaignDisplayOrder());
+            }
+        });
+
+        EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ads));
     }
 
     private List<Ad> loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {

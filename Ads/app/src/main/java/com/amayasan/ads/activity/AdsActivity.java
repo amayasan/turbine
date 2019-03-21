@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.amayasan.ads.fragment.AdsFragment;
 import com.amayasan.ads.R;
 
+// The AdsActivity is the Main Activity in the app
+// It displays the AdsFragment and handles navigation via onBackPressed()
 public class AdsActivity extends AppCompatActivity {
 
     @Override

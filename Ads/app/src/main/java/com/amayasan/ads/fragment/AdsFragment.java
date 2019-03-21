@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,10 +20,16 @@ import com.amayasan.ads.asynctask.AdsDownloadXmlTask;
 import com.amayasan.ads.R;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
-public class AdsFragment extends Fragment implements AdsDownloadXmlTask.OnTaskCompleted {
-    private static final String URL = "http://ads.appia.com/getAds?id=236&password=OVUJ1DJN&siteId=10777&deviceId=4230&sessionId=techtestsession&totalCampaignsRequested=20";
+// The AdsFragment initiates an AsyncTask to download/parse the XML document
+// and displays the resulting List<Ad> in a RecyclerView
+public class AdsFragment extends Fragment {
+    private static final String URL = "http://ads.appia.com/getAds?id=236&password=OVUJ1DJN&siteId=10777&deviceId=4230&sessionId=techtestsession&totalCampaignsRequested=20&lname=amaya";
 
     private AdsViewModel mViewModel;
 
@@ -47,6 +54,15 @@ public class AdsFragment extends Fragment implements AdsDownloadXmlTask.OnTaskCo
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.lPullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadPage();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
         return view;
     }
 
@@ -62,31 +78,41 @@ public class AdsFragment extends Fragment implements AdsDownloadXmlTask.OnTaskCo
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
         if (mViewModel.getAds() == null) {
             loadPage();
         } else {
-            mAdapter = new AdsAdapter(mViewModel.getAds());
-            mRecyclerView.setAdapter(mAdapter);
+            populateAdapter();
         }
     }
 
-    public void loadPage() {
-        new AdsDownloadXmlTask(this).execute(URL);
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onSuccess(List<Ad> ads) {
-        mViewModel.setAds(ads);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AdsDownloadXmlTask.AdsDownloadXmlMessageEvent event) {
+        mViewModel.setAds(event.getAds());
+        populateAdapter();
+    }
+
+    public void loadPage() {
+        new AdsDownloadXmlTask().execute(URL);
+    }
+
+    private void populateAdapter() {
         mAdapter = new AdsAdapter(mViewModel.getAds());
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onError(String errorMessage) {
-
     }
 
     public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.AdViewHolder> {

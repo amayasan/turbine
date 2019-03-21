@@ -16,6 +16,8 @@ import com.amayasan.ads.viewmodel.AdDetailViewModel;
 import com.amayasan.ads.R;
 import com.squareup.picasso.Picasso;
 
+// The AdDetailFragment receives a Ad object via arguments in the Bundle
+// and displays all the relevant information in a TableLayout
 public class AdDetailFragment extends Fragment {
     private static final String AD_KEY = "ad";
 
