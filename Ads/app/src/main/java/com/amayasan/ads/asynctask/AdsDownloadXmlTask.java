@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.amayasan.ads.model.Ad;
 import com.amayasan.ads.xml.AdsXmlParser;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -15,15 +16,20 @@ import java.util.List;
 
 public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
-    public interface OnTaskCompleted {
-        void onSuccess(List<Ad> ads);
-        void onError(String errorMessage);
-    }
+    public static class AdsDownloadXmlMessageEvent {
+        private List<Ad> ads;
 
-    private OnTaskCompleted onTaskCompleted;
+        public AdsDownloadXmlMessageEvent(List<Ad> ads) {
+            setAds(ads);
+        }
 
-    public AdsDownloadXmlTask(OnTaskCompleted onTaskCompleted) {
-        this.onTaskCompleted = onTaskCompleted;
+        public List<Ad> getAds() {
+            return ads;
+        }
+
+        public void setAds(List<Ad> ads) {
+            this.ads = ads;
+        }
     }
 
     @Override
@@ -39,7 +45,7 @@ public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
     @Override
     protected void onPostExecute(List<Ad> ads) {
-        onTaskCompleted.onSuccess(ads);
+        EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ads));
     }
 
     private List<Ad> loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
