@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Ads</string>
+    <string name="description">Description</string>
+    <string name="product_id">Product ID</string>
+    <string name="app_id">App ID</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="average_rating">Average Rating</string>
+    <string name="bid_rate">Bid Rate</string>
+    <string name="billing_type">Billing Type</string>
+    <string name="call_to_action">Call To Action</string>
+    <string name="display_order">Display Order</string>
+    <string name="campaign_id">Campaign ID</string>
+    <string name="campaign_type_id">Campaign Type ID</string>
+    <string name="category">Category</string>
+    <string name="click_proxy">Click Proxy</string>
+    <string name="creative_id">Creative ID</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="min_os_version">Min OS Version</string>
+    <string name="impression_tracking">Impression Tracking</string>
+    <string name="random_pick">Random Pick</string>
+    <string name="number_of_ratings">Number Of Ratings</string>
+    <string name="rating">Rating</string>
+</resources>
