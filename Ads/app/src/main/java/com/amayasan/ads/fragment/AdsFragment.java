@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class AdsFragment extends Fragment implements AdsDownloadXmlTask.OnTaskCompleted {
-    private static final String URL = "http://ads.appia.com/getAds?id=236&password=OVUJ1DJN&siteId=10777&deviceId=4230&sessionId=techtestsession&totalCampaignsRequested=20";
+    private static final String URL = "http://ads.appia.com/getAds?id=236&password=OVUJ1DJN&siteId=10777&deviceId=4230&sessionId=techtestsession&totalCampaignsRequested=20&lname=amaya";
 
     private AdsViewModel mViewModel;
 
