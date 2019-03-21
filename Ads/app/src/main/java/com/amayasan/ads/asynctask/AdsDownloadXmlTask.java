@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
@@ -45,6 +47,15 @@ public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
     @Override
     protected void onPostExecute(List<Ad> ads) {
+
+        Collections.sort(ads, new Comparator<Ad>() {
+            @Override
+            public int compare(Ad lhs, Ad rhs) {
+                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                return Integer.compare(lhs.getCampaignDisplayOrder(), rhs.getCampaignDisplayOrder());
+            }
+        });
+
         EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ads));
     }
 
