@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+// The AdsDownloadXmlTask is an AsyncTask that downloads the XML document
+// at the provided URL, parses it and returns a List<Ad> to the calling
+// AdsFragment via an EventBus message.
 public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
     public static class AdsDownloadXmlMessageEvent {

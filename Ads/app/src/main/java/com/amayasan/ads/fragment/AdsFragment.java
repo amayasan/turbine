@@ -26,6 +26,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+// The AdsFragment initiates an AsyncTask to download/parse the XML document
+// and displays the resulting List<Ad> in a RecyclerView
 public class AdsFragment extends Fragment {
     private static final String URL = "http://ads.appia.com/getAds?id=236&password=OVUJ1DJN&siteId=10777&deviceId=4230&sessionId=techtestsession&totalCampaignsRequested=20&lname=amaya";
 

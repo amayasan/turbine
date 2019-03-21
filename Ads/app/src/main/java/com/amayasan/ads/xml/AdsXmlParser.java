@@ -12,12 +12,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+// The AdsXmlParser handles the parsing of an XML document into a List<Ad>
 public class AdsXmlParser {
     public static final String ns = null;
     public static final String ADS_START_TAG = "ads";
     public static final String AD_ELEMENT_TAG = "ad";
 
-    public List parse(InputStream in) throws XmlPullParserException, IOException {
+    public List<Ad> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -29,8 +30,8 @@ public class AdsXmlParser {
         }
     }
 
-    private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List ads = new ArrayList();
+    private List<Ad> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<Ad> ads = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, ns, ADS_START_TAG);
         while (parser.next() != XmlPullParser.END_TAG) {
