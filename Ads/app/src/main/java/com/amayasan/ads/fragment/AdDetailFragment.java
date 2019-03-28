@@ -102,28 +102,31 @@ public class AdDetailFragment extends Fragment {
     }
 
     private void populateData() {
-        Picasso.get().load(mViewModel.getAd().getProductThumbnail()).into(vProductThumbnail);
-        vProductName.setText(mViewModel.getAd().getProductName());
-        vProductDescription.setText(mViewModel.getAd().getProductDescription());
-        vProductId.setText(Long.toString(mViewModel.getAd().getProductId()));
-        vAppId.setText(mViewModel.getAd().getAppId());
-        vAppPrivacyPolicyUrl.setText((mViewModel.getAd().getAppPrivacyPolicyUrl() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getAppPrivacyPolicyUrl());
-        vAverageRatingImageUrl.setText(mViewModel.getAd().getAverageRatingImageUrl());
-        vBidRate.setText(mViewModel.getAd().getBidRate());
-        vBillingTypeId.setText(Integer.toString(mViewModel.getAd().getBillingTypeId()));
-        vCallToAction.setText(mViewModel.getAd().getCallToAction());
-        vCampaignDisplayOrder.setText(Integer.toString(mViewModel.getAd().getCampaignDisplayOrder()));
-        vCampaignId.setText(Long.toString(mViewModel.getAd().getCampaignId()));
-        vCampaignTypeId.setText(Integer.toString(mViewModel.getAd().getCampaignTypeId()));
-        vCategoryName.setText(mViewModel.getAd().getCategoryName());
-        vClickProxyUrl.setText(mViewModel.getAd().getClickProxyUrl());
-        vCreativeId.setText(Long.toString(mViewModel.getAd().getCreativeId()));
-        vHomeScreen.setText(Boolean.toString(mViewModel.getAd().isHomeScreen()));
-        vMinOSVersion.setText((mViewModel.getAd().getMinOSVersion() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getMinOSVersion());
-        vImpressionTrackingUrl.setText(mViewModel.getAd().getImpressionTrackingUrl());
-        vIsRandomPick.setText(Boolean.toString(mViewModel.getAd().isRandomPick()));
-        vNumberOfRatings.setText(mViewModel.getAd().getNumberOfRatings());
-        vRating.setText(Float.toString(mViewModel.getAd().getRating()));
-
+        try {
+            Picasso.get().load(mViewModel.getAd().getProductThumbnail()).into(vProductThumbnail);
+            vProductName.setText(mViewModel.getAd().getProductName());
+            vProductDescription.setText(mViewModel.getAd().getProductDescription());
+            vProductId.setText(Long.toString(mViewModel.getAd().getProductId()));
+            vAppId.setText(mViewModel.getAd().getAppId());
+            vAppPrivacyPolicyUrl.setText((mViewModel.getAd().getAppPrivacyPolicyUrl() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getAppPrivacyPolicyUrl());
+            vAverageRatingImageUrl.setText(mViewModel.getAd().getAverageRatingImageUrl());
+            vBidRate.setText(mViewModel.getAd().getBidRate());
+            vBillingTypeId.setText(Integer.toString(mViewModel.getAd().getBillingTypeId()));
+            vCallToAction.setText(mViewModel.getAd().getCallToAction());
+            vCampaignDisplayOrder.setText(Integer.toString(mViewModel.getAd().getCampaignDisplayOrder()));
+            vCampaignId.setText(Long.toString(mViewModel.getAd().getCampaignId()));
+            vCampaignTypeId.setText(Integer.toString(mViewModel.getAd().getCampaignTypeId()));
+            vCategoryName.setText(mViewModel.getAd().getCategoryName());
+            vClickProxyUrl.setText(mViewModel.getAd().getClickProxyUrl());
+            vCreativeId.setText(Long.toString(mViewModel.getAd().getCreativeId()));
+            vHomeScreen.setText(Boolean.toString(mViewModel.getAd().isHomeScreen()));
+            vMinOSVersion.setText((mViewModel.getAd().getMinOSVersion() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getMinOSVersion());
+            vImpressionTrackingUrl.setText(mViewModel.getAd().getImpressionTrackingUrl());
+            vIsRandomPick.setText(Boolean.toString(mViewModel.getAd().isRandomPick()));
+            vNumberOfRatings.setText(mViewModel.getAd().getNumberOfRatings());
+            vRating.setText(Float.toString(mViewModel.getAd().getRating()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
