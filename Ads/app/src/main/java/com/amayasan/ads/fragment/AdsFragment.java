@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amayasan.ads.model.Ad;
@@ -37,6 +38,8 @@ public class AdsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private ProgressBar mProgressBar;
+
     public static AdsFragment newInstance() {
         return new AdsFragment();
     }
@@ -54,7 +57,7 @@ public class AdsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.lPullToRefresh);
+        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -62,6 +65,8 @@ public class AdsFragment extends Fragment {
                 pullToRefresh.setRefreshing(false);
             }
         });
+
+        mProgressBar = view.findViewById(R.id.progressBar);
 
         return view;
     }
@@ -102,11 +107,15 @@ public class AdsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(AdsDownloadXmlTask.AdsDownloadXmlMessageEvent event) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         mViewModel.setAds(event.getAds());
         populateAdapter();
     }
 
     public void loadPage() {
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
         new AdsDownloadXmlTask().execute(URL);
     }
 
