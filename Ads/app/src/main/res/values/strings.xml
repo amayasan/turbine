@@ -20,4 +20,7 @@
     <string name="random_pick">Random Pick</string>
     <string name="number_of_ratings">Number Of Ratings</string>
     <string name="rating">Rating</string>
+    <string name="error">Error</string>
+    <string name="no_items">No items</string>
+    <string name="none">None</string>
 </resources>
