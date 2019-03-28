@@ -1,6 +1,8 @@
 package com.amayasan.ads.fragment;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,11 +36,12 @@ public class AdsFragment extends Fragment {
 
     private AdsViewModel mViewModel;
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView vRecycler;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ProgressBar mProgressBar;
+    private ProgressBar vProgressBar;
+    private TextView vEmptyText;
 
     public static AdsFragment newInstance() {
         return new AdsFragment();
@@ -51,13 +54,13 @@ public class AdsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.ads_fragment, container, false);
 
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
+        vRecycler = view.findViewById(R.id.vRecycler);
+        vRecycler.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        vRecycler.setLayoutManager(mLayoutManager);
 
-        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
+        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.vPullToRefresh);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -66,7 +69,8 @@ public class AdsFragment extends Fragment {
             }
         });
 
-        mProgressBar = view.findViewById(R.id.progressBar);
+        vProgressBar = view.findViewById(R.id.vProgressBar);
+        vEmptyText = view.findViewById(R.id.vEmptyText);
 
         return view;
     }
@@ -107,21 +111,46 @@ public class AdsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(AdsDownloadXmlTask.AdsDownloadXmlMessageEvent event) {
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-        mViewModel.setAds(event.getAds());
-        populateAdapter();
+
+        if (event.getException() == null) {
+            // Success case, show results in RecyclerView
+            mViewModel.setAds(event.getAds());
+            populateAdapter();
+        } else {
+            // Failure case, show error message
+            vProgressBar.setVisibility(View.INVISIBLE);
+            vEmptyText.setVisibility(View.VISIBLE);
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.error)
+                    .setMessage(event.getException().getMessage())
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                           dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     public void loadPage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        vRecycler.setVisibility(View.INVISIBLE);
+        vEmptyText.setVisibility(View.INVISIBLE);
+        vProgressBar.setVisibility(View.VISIBLE);
         new AdsDownloadXmlTask().execute(URL);
     }
 
     private void populateAdapter() {
-        mAdapter = new AdsAdapter(mViewModel.getAds());
-        mRecyclerView.setAdapter(mAdapter);
+        vProgressBar.setVisibility(View.INVISIBLE);
+        if (!mViewModel.getAds().isEmpty()) {
+            vEmptyText.setVisibility(View.INVISIBLE);
+            vRecycler.setVisibility(View.VISIBLE);
+            mAdapter = new AdsAdapter(mViewModel.getAds());
+            vRecycler.setAdapter(mAdapter);
+        } else {
+            vEmptyText.setVisibility(View.VISIBLE);
+            vRecycler.setVisibility(View.INVISIBLE);
+        }
     }
 
     public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.AdViewHolder> {

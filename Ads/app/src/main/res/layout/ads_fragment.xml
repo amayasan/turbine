@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/vProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="50dp"
@@ -19,13 +19,24 @@
             android:layout_gravity="center"
             android:visibility="invisible"/>
 
+        <TextView
+            android:id="@+id/vEmptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/large_padding"
+            android:text="@string/no_items"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:visibility="invisible"/>
+
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/pullToRefresh"
+            android:id="@+id/vPullToRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/vRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical" />

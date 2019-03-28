@@ -23,9 +23,14 @@ public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
 
     public static class AdsDownloadXmlMessageEvent {
         private List<Ad> ads;
+        private Exception exception;
 
         public AdsDownloadXmlMessageEvent(List<Ad> ads) {
             setAds(ads);
+        }
+
+        public AdsDownloadXmlMessageEvent(Exception exception) {
+            setException(exception);
         }
 
         public List<Ad> getAds() {
@@ -35,31 +40,39 @@ public class AdsDownloadXmlTask extends AsyncTask<String, Void, List<Ad>> {
         public void setAds(List<Ad> ads) {
             this.ads = ads;
         }
+
+        public Exception getException() {
+            return exception;
+        }
+
+        public void setException(Exception exception) {
+            this.exception = exception;
+        }
     }
 
     @Override
     protected List<Ad> doInBackground(String... urls) {
         try {
             return loadXmlFromNetwork(urls[0]);
-        } catch (IOException e) {
-            return null;
-        } catch (XmlPullParserException e) {
+        } catch (Exception ex) {
+            EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ex));
             return null;
         }
     }
 
     @Override
     protected void onPostExecute(List<Ad> ads) {
+        if (ads != null) {
+            Collections.sort(ads, new Comparator<Ad>() {
+                @Override
+                public int compare(Ad lhs, Ad rhs) {
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    return Integer.compare(lhs.getCampaignDisplayOrder(), rhs.getCampaignDisplayOrder());
+                }
+            });
 
-        Collections.sort(ads, new Comparator<Ad>() {
-            @Override
-            public int compare(Ad lhs, Ad rhs) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return Integer.compare(lhs.getCampaignDisplayOrder(), rhs.getCampaignDisplayOrder());
-            }
-        });
-
-        EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ads));
+            EventBus.getDefault().post(new AdsDownloadXmlMessageEvent(ads));
+        }
     }
 
     private List<Ad> loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
