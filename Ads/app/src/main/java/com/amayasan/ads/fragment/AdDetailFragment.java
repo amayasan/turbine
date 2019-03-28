@@ -107,7 +107,7 @@ public class AdDetailFragment extends Fragment {
         vProductDescription.setText(mViewModel.getAd().getProductDescription());
         vProductId.setText(Long.toString(mViewModel.getAd().getProductId()));
         vAppId.setText(mViewModel.getAd().getAppId());
-        vAppPrivacyPolicyUrl.setText(mViewModel.getAd().getAppPrivacyPolicyUrl());
+        vAppPrivacyPolicyUrl.setText((mViewModel.getAd().getAppPrivacyPolicyUrl() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getAppPrivacyPolicyUrl());
         vAverageRatingImageUrl.setText(mViewModel.getAd().getAverageRatingImageUrl());
         vBidRate.setText(mViewModel.getAd().getBidRate());
         vBillingTypeId.setText(Integer.toString(mViewModel.getAd().getBillingTypeId()));
@@ -119,7 +119,7 @@ public class AdDetailFragment extends Fragment {
         vClickProxyUrl.setText(mViewModel.getAd().getClickProxyUrl());
         vCreativeId.setText(Long.toString(mViewModel.getAd().getCreativeId()));
         vHomeScreen.setText(Boolean.toString(mViewModel.getAd().isHomeScreen()));
-        vMinOSVersion.setText(mViewModel.getAd().getMinOSVersion());
+        vMinOSVersion.setText((mViewModel.getAd().getMinOSVersion() == null) ? getResources().getString(R.string.none) : mViewModel.getAd().getMinOSVersion());
         vImpressionTrackingUrl.setText(mViewModel.getAd().getImpressionTrackingUrl());
         vIsRandomPick.setText(Boolean.toString(mViewModel.getAd().isRandomPick()));
         vNumberOfRatings.setText(mViewModel.getAd().getNumberOfRatings());
