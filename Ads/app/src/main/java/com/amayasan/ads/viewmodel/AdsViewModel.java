@@ -1,6 +1,6 @@
 package com.amayasan.ads.viewmodel;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import com.amayasan.ads.model.Ad;
 
